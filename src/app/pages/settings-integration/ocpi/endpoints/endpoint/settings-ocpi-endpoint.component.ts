@@ -179,7 +179,7 @@ export class SettingsOcpiEndpointComponent implements OnInit {
       if (response.status === RestResponse.SUCCESS) {
         this.messageService.showSuccessMessage('ocpiendpoints.success_ping', { name: ocpiEndpoint.name });
       } else {
-        // switch message according status code recieved
+        // Switch message according status code received
         let messageId = 'ocpiendpoints.error_ping';
         switch (response.statusCode) {
           case StatusCodes.UNAUTHORIZED:
