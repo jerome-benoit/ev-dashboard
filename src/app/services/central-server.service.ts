@@ -17,7 +17,7 @@ import { ChargePoint, ChargingStation, OCPPAvailabilityType, OcppParameter } fro
 import { Company } from '../types/Company';
 import CentralSystemServerConfiguration from '../types/configuration/CentralSystemServerConfiguration';
 import { IntegrationConnection, UserConnection } from '../types/Connection';
-import { ActionResponse, ActionsResponse, BillingOperationResponse, CheckAssetConnectionResponse, CheckBillingConnectionResponse, CompanyDataResult, DataResult, LoginResponse, OCPIGenerateLocalTokenResponse, OCPIJobStatusesResponse, OCPIPingResponse, OICPJobStatusesResponse, OICPPingResponse, Ordering, Paging, SiteDataResult } from '../types/DataResult';
+import { ActionResponse, ActionsResponse, BillingOperationResponse, CheckAssetConnectionResponse, CheckBillingConnectionResponse, CompanyDataResult, DataResult, LoginResponse, OCPIGenerateLocalTokenResponse, OCPIJobStatusesResponse, OCPIPingResponse, OICPJobStatusesResponse, OICPPingResponse, Ordering, Paging, SiteAreaDataResult, SiteDataResult } from '../types/DataResult';
 import { EndUserLicenseAgreement } from '../types/Eula';
 import { FilterParams, Image, KeyValue } from '../types/GlobalType';
 import { AssetInError, ChargingStationInError, TransactionInError } from '../types/InError';
@@ -27,7 +27,7 @@ import { OCPPResetType } from '../types/ocpp/OCPP';
 import { RefundReport } from '../types/Refund';
 import { RegistrationToken } from '../types/RegistrationToken';
 import { ServerAction, ServerRoute } from '../types/Server';
-import { SettingDB } from '../types/Setting';
+import { BillingSettings, SettingDB } from '../types/Setting';
 import { Site, SiteUser } from '../types/Site';
 import { SiteArea, SiteAreaConsumption } from '../types/SiteArea';
 import { StatisticData } from '../types/Statistic';
@@ -465,7 +465,7 @@ export class CentralServerService {
   }
 
   public getSiteAreas(params: FilterParams = {},
-    paging: Paging = Constants.DEFAULT_PAGING, ordering: Ordering[] = []): Observable<DataResult<SiteArea>> {
+    paging: Paging = Constants.DEFAULT_PAGING, ordering: Ordering[] = []): Observable<SiteAreaDataResult> {
     // Verify init
     this.checkInit();
     // Build Paging
@@ -473,7 +473,7 @@ export class CentralServerService {
     // Build Ordering
     this.getSorting(ordering, params);
     // Execute the REST service
-    return this.httpClient.get<DataResult<SiteArea>>(`${this.centralRestServerServiceSecuredURL}/${ServerAction.SITE_AREAS}`,
+    return this.httpClient.get<SiteAreaDataResult>(`${this.centralRestServerServiceSecuredURL}/${ServerAction.SITE_AREAS}`,
       {
         headers: this.buildHttpHeaders(),
         params,
@@ -1256,6 +1256,20 @@ export class CentralServerService {
       );
   }
 
+  public exportTags(params: FilterParams): Observable<Blob> {
+    // Verify init
+    this.checkInit();
+    return this.httpClient.get(`${this.centralRestServerServiceSecuredURL}/${ServerAction.TAGS_EXPORT}`,
+      {
+        headers: this.buildHttpHeaders(),
+        responseType: 'blob',
+        params,
+      })
+      .pipe(
+        catchError(this.handleHttpError),
+      );
+  }
+
   public getTransactionsInError(params: FilterParams,
     paging: Paging = Constants.DEFAULT_PAGING, ordering: Ordering[] = []): Observable<DataResult<TransactionInError>> {
     // Verify init
@@ -1524,17 +1538,43 @@ export class CentralServerService {
       );
   }
 
+  public getBillingSettings(): Observable<BillingSettings> {
+    // verify init
+    this.checkInit();
+    // Build the URL
+    const url = this.buildRestEndpointUrl(ServerRoute.REST_BILLING_SETTING);
+    // Execute the REST Service
+    return this.httpClient.get<BillingSettings>(url, {
+      headers: this.buildHttpHeaders()
+    }).pipe(
+      catchError(this.handleHttpError),
+    );
+  }
+
+  public updateBillingSettings(billingSettings: BillingSettings): Observable<ActionResponse> {
+    // Verify init
+    this.checkInit();
+    // Build the URL
+    const url = this.buildRestEndpointUrl(ServerRoute.REST_BILLING_SETTING);
+    // Execute
+    return this.httpClient.put<ActionResponse>(url, billingSettings, {
+      headers: this.buildHttpHeaders(),
+    }).pipe(
+      catchError(this.handleHttpError),
+    );
+  }
+
   public checkBillingConnection(): Observable<CheckBillingConnectionResponse> {
     // verify init
     this.checkInit();
+    // Build the URL
+    const url = this.buildRestEndpointUrl(ServerRoute.REST_BILLING_CHECK);
     // Execute the REST Service
-    return this.httpClient.get<CheckBillingConnectionResponse>(`${this.centralRestServerServiceSecuredURL}/${ServerAction.CHECK_BILLING_CONNECTION}`,
-      {
-        headers: this.buildHttpHeaders(),
-      })
-      .pipe(
-        catchError(this.handleHttpError),
-      );
+    return this.httpClient.post<CheckBillingConnectionResponse>(url, {}, {
+      headers: this.buildHttpHeaders()
+    }).pipe(
+      catchError(this.handleHttpError),
+    );
   }
 
   public synchronizeUsersForBilling(): Observable<ActionsResponse> {
@@ -2710,6 +2750,20 @@ export class CentralServerService {
     // Execute
     return this.httpClient.put<ActionResponse>(
       `${this.restServerSecuredURL}/${ServerRoute.REST_CHARGING_PROFILES}/${chargingProfile.id}`, chargingProfile,
+      {
+        headers: this.buildHttpHeaders(this.windowService.getSubdomain()),
+      })
+      .pipe(
+        catchError(this.handleHttpError),
+      );
+  }
+
+  public createChargingProfile(chargingProfile: ChargingProfile): Observable<ActionResponse> {
+    // Verify init
+    this.checkInit();
+    // Execute
+    return this.httpClient.post<ActionResponse>(
+      `${this.restServerSecuredURL}/${ServerRoute.REST_CHARGING_PROFILES}`, chargingProfile,
       {
         headers: this.buildHttpHeaders(this.windowService.getSubdomain()),
       })
