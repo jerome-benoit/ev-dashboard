@@ -15,6 +15,7 @@ export interface Asset extends TableData, CreatedUpdatedProps, AbstractCurrentCo
   coordinates: number[];
   image: string;
   dynamicAsset: boolean;
+  usesPushAPI: boolean;
   connectionID: string;
   meterID: string;
   consumption: AbstractConsumption;
@@ -24,6 +25,9 @@ export interface Asset extends TableData, CreatedUpdatedProps, AbstractCurrentCo
   lastChangedOn: Date;
   connected: boolean;
   excludeFromSmartCharging?: boolean;
+  variationThresholdPercent?: number;
+  powerWattsLastSmartChargingRun?: number;
+  issuer: boolean;
 }
 
 export interface AssetConsumption {

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { AuthorizationService } from 'services/authorization.service';
 import { WindowService } from 'services/window.service';
 import { TableSiteAreaGenerateQrCodeConnectorAction, TableSiteAreaGenerateQrCodeConnectorsActionDef } from 'shared/table/actions/site-areas/table-site-area-generate-qr-code-connector-action';
 
@@ -69,6 +70,7 @@ export class SiteAreasListTableDataSource extends TableDataSource<SiteArea> {
     private appUnitPipe: AppUnitPipe,
     private centralServerNotificationService: CentralServerNotificationService,
     private centralServerService: CentralServerService,
+    private authorizationService: AuthorizationService,
     private datePipe: AppDatePipe,
     private windowService: WindowService,
     private componentService: ComponentService) {
@@ -240,25 +242,28 @@ export class SiteAreasListTableDataSource extends TableDataSource<SiteArea> {
     const moreActions = new TableMoreAction([]);
     if (siteArea.canUpdate) {
       actions.push(this.editAction);
-      // flag to be added on   the backend for increased granularity
-      moreActions.addActionInMoreActions(this.exportOCPPParamsAction);
-      moreActions.addActionInMoreActions(this.siteAreaGenerateQrCodeConnectorAction);
     } else {
       actions.push(this.viewAction);
     }
     if (this.isAssetComponentActive) {
       if (siteArea.canAssignAssets || siteArea.canUnassignAssets) {
-        actions.splice(2, 0, this.assignAssetsToSiteAreaAction);
-      } else {
-        actions.splice(2, 0, this.viewAssetsOfSiteArea);
+        actions.push(this.assignAssetsToSiteAreaAction);
+      } else if (this.authorizationService.canListAssets()) {
+        actions.push(this.viewAssetsOfSiteArea);
       }
+    }
+    if (siteArea.canExportOCPPParams) {
+      moreActions.addActionInMoreActions(this.exportOCPPParamsAction);
+    }
+    if (siteArea.canGenerateQrCode) {
+      moreActions.addActionInMoreActions(this.siteAreaGenerateQrCodeConnectorAction);
     }
     if (siteArea.canDelete) {
       moreActions.addActionInMoreActions(this.deleteAction);
     }
     if (siteArea.canAssignChargingStations || siteArea.canUnassignChargingStations) {
       actions.push(this.assignChargingStationsToSiteAreaAction);
-    } else {
+    } else if (this.authorizationService.canListChargingStations()) {
       actions.push(this.viewChargingStationsOfSiteArea);
     }
     moreActions.addActionInMoreActions(openInMaps);
@@ -358,9 +363,10 @@ export class SiteAreasListTableDataSource extends TableDataSource<SiteArea> {
   }
 
   public buildTableFiltersDef(): TableFilterDef[] {
+    const issuerFilter = new IssuerFilter().getFilterDef();
     return [
-      new IssuerFilter().getFilterDef(),
-      new SiteTableFilter().getFilterDef(),
+      issuerFilter,
+      new SiteTableFilter([issuerFilter]).getFilterDef(),
     ];
   }
 }

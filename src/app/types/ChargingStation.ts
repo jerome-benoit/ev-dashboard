@@ -1,4 +1,5 @@
 import { KeyValue } from './GlobalType';
+import { Site } from './Site';
 import { SiteArea } from './SiteArea';
 import { TableData } from './Table';
 import { InactivityStatus } from './Transaction';
@@ -42,6 +43,7 @@ export interface ChargingStation extends TableData {
   connectors: Connector[];
   currentIPAddress?: string;
   siteArea?: SiteArea;
+  site?: Site;
   capabilities?: ChargingStationCapabilities;
   ocppStandardParameters?: KeyValue[];
   ocppVendorParameters?: KeyValue[];
@@ -125,6 +127,8 @@ export interface Connector extends TableData {
   currentTransactionID?: number;
   currentTransactionDate?: Date;
   currentTagID?: string;
+  currentUserID?: string;
+  user?: User;
   status: ChargePointStatus;
   errorCode?: string;
   info?: string;
@@ -136,8 +140,6 @@ export interface Connector extends TableData {
   amperageLimit?: number;
   statusLastChangedOn?: Date;
   numberOfConnectedPhase?: number;
-  userID?: string;
-  user?: User;
   currentType?: CurrentType;
   chargePointID?: number;
   hasDetails: boolean;

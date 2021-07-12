@@ -1,6 +1,8 @@
+import { Car, CarCatalog } from './Car';
 import { Company } from './Company';
 import { Site } from './Site';
 import { SiteArea } from './SiteArea';
+import { Tag } from './Tag';
 import { Transaction } from './Transaction';
 import { UserStatus } from './User';
 
@@ -72,16 +74,34 @@ export interface CheckBillingConnectionResponse extends ActionResponse {
 export interface DataResult<T> {
   count: number;
   result: T[];
+  projectedFields?: string[];
 }
+
 export interface CompanyDataResult extends DataResult<Company> {
   canCreate: boolean;
 }
+
 export interface SiteDataResult extends DataResult<Site> {
   canCreate: boolean;
 }
+
+export interface CarDataResult extends DataResult<Car> {
+  canCreate: boolean;
+}
+export interface CarCatalogDataResult extends DataResult<CarCatalog> {
+  canSync: boolean;
+}
+
 export interface SiteAreaDataResult extends DataResult<SiteArea> {
   canCreate: boolean;
 }
+
+export interface TagDataResult extends DataResult<Tag> {
+  canCreate: boolean;
+  canImport: boolean;
+  canExport: boolean;
+}
+
 export interface CheckAssetConnectionResponse extends ActionResponse {
   connectionIsValid: boolean;
 }
@@ -129,6 +149,8 @@ export interface VerifyEmailResponse extends ActionResponse {
   userStatus?: UserStatus;
 }
 
-export interface BillingOperationResponse extends ActionResponse {
-  internalData: Record<string, unknown>;
+export interface BillingOperationResult {
+  succeeded: boolean;
+  error?: Error;
+  internalData?: unknown; // an object returned by the concrete implementation - e.g.: STRIPE
 }

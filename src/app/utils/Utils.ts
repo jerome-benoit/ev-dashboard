@@ -18,7 +18,7 @@ import { Car, CarCatalog, CarConverter, CarType } from '../types/Car';
 import { ChargePoint, ChargingStation, ChargingStationPowers, Connector, CurrentType, StaticLimitAmps, Voltage } from '../types/ChargingStation';
 import { KeyValue } from '../types/GlobalType';
 import { MobileType } from '../types/Mobile';
-import { ButtonType } from '../types/Table';
+import { ButtonType, TableDataSourceMode } from '../types/Table';
 import { User, UserCar, UserToken } from '../types/User';
 import { Constants } from './Constants';
 
@@ -32,6 +32,42 @@ export class Utils {
         formGroup.disable();
         break;
     }
+  }
+
+  public static buildConnectorInfo(connector: Connector): string {
+    const info = [];
+    if (!Utils.isEmptyString(connector.errorCode)) {
+      info.push(connector.errorCode);
+    }
+    if (!Utils.isEmptyString(connector.vendorErrorCode)) {
+      info.push(connector.vendorErrorCode);
+    }
+    if (!Utils.isEmptyString(connector.info)) {
+      info.push(connector.info);
+    }
+    if (Utils.isEmptyArray(info)) {
+      info.push('-');
+    }
+    return info.join(' - ');
+  }
+
+  public static getTableDataSourceModeFromDialogMode(dialogMode: DialogMode): TableDataSourceMode {
+    switch (dialogMode) {
+      case DialogMode.CREATE:
+      case DialogMode.EDIT:
+        return TableDataSourceMode.READ_WRITE;
+      case DialogMode.VIEW:
+        return TableDataSourceMode.READ_ONLY;
+      default:
+        return TableDataSourceMode.READ_ONLY;
+    }
+  }
+
+  public static isEmptyObject(object: any): boolean {
+    if (!object) {
+      return true;
+    }
+    return Object.keys(object).length === 0;
   }
 
   public static isEmptyArray(array: any): boolean {
@@ -775,12 +811,6 @@ export class Utils {
       // Server connection error
       case 0:
         messageService.showErrorMessageConnectionLost();
-        if (centralServerService.configService.getCentralSystemServer().logoutOnConnectionError) {
-          // Log Off (remove token)
-          centralServerService.logoutSucceeded();
-          // Navigate to Login
-          router.navigate(['/auth/login']);
-        }
         break;
       case HTTPError.USER_ACCOUNT_CHANGED:
       case HTTPError.TENANT_COMPONENT_CHANGED:
@@ -905,8 +935,11 @@ export class Utils {
     document.body.removeChild(element);
   }
 
-  public static replaceDoubleQuotes(value: any): string{
-    return typeof value === 'string' ? '"' + value.replace(/^"|"$/g, '').replace(/"/g, '""') + '"' : value;
+  // when exporting values
+  public static escapeCsvValue(value: any): string {
+    // add double quote start and end
+    // replace double quotes inside value to double double quotes to display double quote correctly in csv editor
+    return typeof value === 'string' ? '"' + value.replace(/"/g, '""') + '"' : value;
   }
 
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ChartDataSets } from 'chart.js';
+import { ChartData, ChartDataSets } from 'chart.js';
 import * as moment from 'moment';
 
 import { LocaleService } from '../../../services/locale.service';
 import { StatisticData } from '../../../types/Statistic';
 import { Utils } from '../../../utils/Utils';
-import { ChartConstants, ChartData } from './chart-utilities';
+import { ChartConstants } from './chart-utilities';
 
 export interface StatisticsBuildValueWithUnit {
   value: number;
@@ -398,6 +398,8 @@ export class StatisticsBuildService {
       } else {
         totalsWithUnit[index].value += totalOfLastUnit;
       }
+    } else {
+      totalsWithUnit.push({ value:0, unit: '' });
     }
 
     if (ignoreEmptyUnit && totalsWithUnit.length === 2) {

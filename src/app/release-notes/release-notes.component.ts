@@ -24,12 +24,221 @@ export class ReleaseNotesComponent {
   public buildReleaseNotes() {
     this.releaseNotes = [
       {
+        version: '2.4.75',
+        date: new Date('2021-07-08'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Smart Charging: Use efficiency when excluding the Charging Stations`,
+              `Force the Charging Station unavailability's status after 2 mins instead of 9 mins when not responding`,
+              `Set the standard Heartbeat OCPP param first and try workarounds next if it failed`,
+              `Make Log's Action filter more specifics (REST, OCPP...)`,
+              `Added new Joint new Charging Station's model in templates`,
+              `Optimized DB access in OICP endpoint (Hubject)`,
+              `Prevent deletion of Users in Stripe`,
+            ],
+          },
+        ],
+      },
+      {
+        version: '2.4.74',
+        date: new Date('2021-07-06'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Save Status Notification right after Boot Notification even if the status has not changed`,
+              `Added Company, Site and Site Area in Session list`,
+              `Hide Delete button when user image is not set`,
+              `Optimized DB access in OCPI endpoint`,
+            ],
+          },
+        ],
+      },
+      {
+        version: '2.4.73',
+        date: new Date('2021-07-02'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Do not bill Sessions < 1 kWh and < 1 min`,
+              `Billing montly payment with Stripe`,
+              `Added Low Consumption (< 1 kWh) and Low Duration (< 1 min) in Sessions In Error`,
+              `Improve perfs to get Log details`,
+              `Added Connector's information in Charging Station and Session In Progress lists`,
+              `Added Stop reason in Session History list`,
+              `Saved Stop reason OCPP Stop Transaction`,
+              `Only log stack trace of exceptions`,
+              `Reduce number of updates in DB of Charging Station's Heart Beats`,
+              `Returned distance meters of Charging Stations`,
+              `Keep performance logs for 2 weeks instead of 4`,
+              `Added Car and User info in Sessions in Error`,
+            ],
+          },
+        ],
+      },
+      {
+        version: '2.4.72',
+        date: new Date('2021-06-30'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Migrated Tag endpoints to REST public API`,
+              `Fixed User with role Basic cannot change his password`,
+              `Added new Nexans new Charging Station's models in templates`,
+              `Optimized DB access in Notification and Site management`,
+              `Added clear of Billing test data`,
+              `Took into account Transaction timezone in Billing`,
+              `Display on going transaction stats in footer`,
+              `Construct of URLs without 'safe-url-assembler' open source`,
+            ],
+          },
+        ],
+      },
+      {
+        version: '2.4.71',
+        date: new Date('2021-06-28'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Synchronized all OCPP calls`,
+              `Fixed cannot assign a Site to a User`,
+              `Enhanced Billing's logs`,
+              `Added new G2Mobility new Charging Station's models in templates`,
+              `Refactored timestamps of optimizer request`,
+            ],
+          },
+          {
+            name: 'Mobile (1.3.42)',
+            changes: [
+              `Fixed Billing payment method is not refresh after creating one`,
+              `Added missing Invoice statuses`,
+              `Set the Site name is Site Area list`,
+              `Set the Site Area name in Charging Station list`,
+              `Added default sorting in all HTTP requests`,
+              `Avoid retrieving User for each invoice`,
+              `Do not retrieve all User's images in User list`,
+              `Reduced the number of HTTP requests (optimization)`,
+              `UI/Design Improvements`,
+              `Removed debug logs`,
+            ],
+          },
+        ],
+      },
+      {
+        version: '2.4.70',
+        date: new Date('2021-06-26'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Allow external systems to push Asset's consumption for the Smart Charging`,
+              `Check payment method is provided in Start Transaction`,
+              `Empty Charging Station's connectors at Boot Notification`,
+              `Added new AixCharger, Alfen, Schneider and Ebee new Charging Station's models in templates`,
+              `Authorization on Assign Assets is driven by the backend`,
+              `Fixed static filters in lists were overriden by dependent toolbar filters`,
+              `Fixed Extra Inactivity is only calculated between Finishing and Available status notification`,
+              `Fixed OICP EVSE was not saved in DB`,
+              `Fixed Eichrecht Signed Data handling in Stop Transaction`,
+              `Migrated the User Service to the REST public API`,
+              `Assert that OICP and OCPI Roaming components cannot be both active in the same tenant`,
+              `Optimized DB access for Car`,
+            ],
+          },
+        ],
+      },
+      {
+        version: '2.4.69',
+        date: new Date('2021-06-18'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Added filter dependencies`,
+              `Stripe beta version enhancements`,
+              `Optimized database access`,
+              `Enforced Smart Charging safety + minor fixes`,
+              `Return authorized fields to the UI to adjust visible columns`,
+              `Added new Lafon, Delta and Gewiss new Charging Station's models in templates`,
+              `Keep the Action filter selection after a search in Logs`,
+              `Fixed send End of Charge notification for Legrand Charging Station`,
+              `Fixed Session detail pop-up does not show up when clicked from email`,
+            ],
+          },
+        ],
+      },
+      {
+        version: '2.4.68',
+        date: new Date('2021-06-11'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Handle Transaction.End meter value outside the Stop Transaction`,
+              `Do not automatically stop the ongoing Transaction when Status Notification changes from Charging to Available`,
+              `Allow to clean-up Billing Test data`,
+              `Ebee, Wallbox: fixes for latest firmware version`,
+              `Migrated Cars to the new authorization framework`,
+              `Fixed cannot import Badges without Users`,
+              `Added filter dependencies (Organization, Site, Site Area...)`,
+              `Added get default Car and Tag, get Sites and assign Sites in REST User's endpoint`,
+            ],
+          },
+        ],
+      },
+      {
+        version: '2.4.67',
+        date: new Date('2021-05-29'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Fix users filter on badge`,
+              `Fix asset consumption backup calculation`,
+              `Add periodic billing support`,
+              `Add RESTful API for boot and status notifications`,
+              `Fix smart charging URI handling`,
+              `Support asynchronous billing`,
+              `Fix the migration for visual ID tag support`,
+              `Charging station template: Add Delta model EVDE25D4DUM`,
+              `Security: Ensure basic user without a site can't see anything`,
+              `Log OCPP-J transaction events inconsistencies`,
+              `WIT Asset integration`,
+              `Billing: Add country code to address`,
+              `Add RESTful endpoints for invoices`,
+              `Various fixes to the badge Visual ID support`,
+              `Convert tags authorization to new scheme`,
+              `Various fixes to the billing dashboard UI`,
+              `Add billing invoices detailed description support`,
+              `Add assets information refresh interval support`,
+              `Add notification support for billing payment failure`,
+              `Fix badge ID support to search filter`,
+              `Fix consumption computation from MeterValues Current.Import measurand`,
+              `Fix organizations read permission for admin role with also site admin role`,
+              `Allow site admin role to view transaction badge ID if done on their site`,
+              `Add a visual ID field to badge record`,
+              `Fix badges CSV import/export`,
+              `Fix user site assignment`,
+              `Server side german translation update`,
+              `Fix assets consumption retrieval if empty`,
+              `Ensure the currently charging station active connection to the OCPP-J server is used to send commands`
+            ],
+          },
+        ],
+      },
+      {
         version: '2.4.66',
         date: new Date('2021-05-12'),
         componentChanges: [
           {
             name: 'Dashboard',
             changes: [
+              `Add backward compatibility to REST API charging station endpoints for the mobile application`,
               `New authorization framework on Site and Site Area`,
               `Add Export of Tags with Users`,
               `Execute the push of CDRs task only on finished transactions`,
@@ -39,7 +248,7 @@ export class ReleaseNotesComponent {
               `Fixed ioThink current instant watts in Battery asset`,
               `Fixed Shelly amperage`,
               `Fixed power slider in Charging Profiles`,
-              `Synchronize Biling Users only sync Users (not Invoices)`,
+              `Synchronize Billing Users only sync Users (not Invoices)`,
               `IoThink integration response filtering according new model`,
               `Fixed user with role Demo can see the user in session's details pop-up`,
               `Change performance logs from error to warning to avoid confusion in prod with real errors`,

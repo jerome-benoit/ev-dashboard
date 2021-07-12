@@ -27,7 +27,6 @@
     "connectors": "Connexions",
     "notifications": "Notifications",
     "app_name": "e-Mobility",
-    "last_update": "Version 2.4.66",
     "version": "Version",
     "about_us": "A Propos",
     "unexpected_error_backend": "Une erreur inattendue s'est produite, vérifiez les logs",
@@ -237,7 +236,8 @@
       "download": "Télécharger",
       "test_connection": "Tester la connexion",
       "force_available_status": "Forcer le Statut en Disponible",
-      "force_unavailable_status": "Forcer le Statut en Indisponible"
+      "force_unavailable_status": "Forcer le Statut en Indisponible",
+      "display_users": "Afficher les utilisateurs"
     }
   },
   "issuer": {
@@ -330,12 +330,14 @@
     "logo": "Logo",
     "name": "Nom",
     "asset_type": "Type de ressource",
-    "fluctuation_percent": "Fluctuation à court terme (%)",
+    "fluctuation_percent": "Fluctuation (%)",
+    "variation_percent": "Seuil de déclenchement (%)",
     "static_value_watt": "Puissance Statique (W)",
     "produce": "Produit de l'Energie",
     "consume": "Consomme de l'Energie",
     "consume_and_produce": "Consomme et Produit de l'Energie",
     "dynamic_asset": "Ressource Dynamique",
+    "uses_push_api": "Utiliser API externe",
     "instant_power": "Puissance Instantanée",
     "asset_connection": "Connexion à la Ressource",
     "meter_id": "ID du Compteur",
@@ -377,7 +379,7 @@
   "sites": {
     "assign_company": "Assigner une Companie",
     "auto_user_site_assignment": "Assignation automatique des nouveaux utilisateurs sur ce site",
-    "public": "This site is public",
+    "public": "Ce site est public",
     "public_site": "Public",
     "auto_assignment": "Assign. Auto Utilisateur",
     "user_list": "Utilisateurs authorizés à utiliser les bornes sur ce site",
@@ -430,7 +432,8 @@
     "update_site_users_owner_error": "Une erreur est survenue pendant l'attribution de '{{userName}}' en tant que propriétaire du site, vérifiez les logs",
     "export_all_params_title": "Exporter les paramètres OCPP",
     "export_all_params_confirm": "Voulez-vous vraiment exporter tous les paramètres OCPP de toutes les bornes appartenant au site '{{siteName}}' ?",
-    "export_all_params_error": "Une erreur est survenue pendant l'exportation des paramètres OCPP, vérifiez les logs"
+    "export_all_params_error": "Une erreur est survenue pendant l'exportation des paramètres OCPP, vérifiez les logs",
+    "display_users": "Afficher les utilisateurs"
   },
   "site_areas": {
     "assign_site": "Assigner un Site",
@@ -564,7 +567,7 @@
   },
   "statistics": {
     "title": "Statistiques",
-    "description": "Statistics of charging sessions",
+    "description": "Statistiques des Sessions de Charge",
     "charger_kw_h": "kW.h",
     "legend_select_unselect_all": "Select./Deselect. Tout",
     "graphic_title_consumption_y_axis": "Consommation (kW.h)",
@@ -718,7 +721,7 @@
     "connector0": "Borne",
     "connector_type": "Type",
     "connector_error_title": "Erreur",
-    "connector_info_title": "Information erreur",
+    "connector_info_title": "Information",
     "connector_vendor_error_code_title": "Code erreur Fab.",
     "connector_max_power": "Puissance Maximale (Watts)",
     "charger_url": "URL",
@@ -890,7 +893,7 @@
         "stack_level": "Niveau Prio",
         "site_area": "Zone",
         "site_area_limit": "Limite Zone",
-        "redirect": "Naviguer vers Charging Plans"
+        "redirect": "Naviguer vers Plans de Charge"
       }
     },
     "more_actions": {
@@ -991,8 +994,8 @@
     "unlock_connector_button": "Déverrouiller",
     "unlock_connector_confirm": "Voulez-vous vraiment dévérouiller le connecteur '{{connectorId}}' de la borne '{{chargeBoxID}}'?",
     "unlock_connector_success": "Le connecteur '{{connectorId}}' de la borne '{{chargeBoxID}}' a été dévérouillé avec succès",
-    "unlock_connector_error": "The Charging Station has not been able to unlock the connector",
-    "unlock_connector_not_supported_error": "This Charging Station does not support the unlock of the connector",
+    "unlock_connector_error": "La borne n'a pas réussi a dévérouiller le connecteur",
+    "unlock_connector_not_supported_error": "La borne ne supporte pas le dévérouillage du connecteur",
     "connector_type_unknown": "Non défini",
     "connector_type_type2": "Type 2",
     "connector_type_type1": "Type 1",
@@ -1034,7 +1037,7 @@
     "qr_code_generation_error": "Une erreur est survenue lors de la generation des code QR",
     "tabs": {
       "list": "Bornes",
-      "charging_plans": "Charging Plans",
+      "charging_plans": "Plans de Charge",
       "in_error": "En Erreur",
       "connection": "Connecter une nouvelle borne"
     },
@@ -1315,11 +1318,15 @@
     "status": {
       "paid": "Payée",
       "unpaid": "Impayée",
-      "draft": "Brouillon"
+      "draft": "Brouillon",
+      "deleted": "Supprimée",
+      "uncollectible": "Non recouvrable",
+      "void": "Annulée"
     },
-    "id": "Numéro de facture",
+    "number": "Numéro de facture",
     "createdOn": "Date de facture",
     "price": "Prix de la facture",
+    "amount": "Montant",
     "cannot_retrieve_invoices": "Impossible de récupérer la liste des factures",
     "cannot_download_invoice": "Impossible de télécharger la facture",
     "number_of_items": "Sessions",
@@ -1331,6 +1338,8 @@
     "id": "ID",
     "not_active": "Ce badge n'est pas actif",
     "issuer": "Propriétaire",
+    "visual_id": "ID visuel",
+    "visual_id_instruction": "Veuillez remplir L'ID affiché sur le badge",
     "status": "Statut",
     "activated": "Activé",
     "deactivated": "Inactif",
@@ -1357,6 +1366,7 @@
     "tag_not_found": "Le badge n'a pas été trouvé",
     "select_tags": "Selection Badge",
     "tag_id_already_used": "Le badge '{{tagID}}' existe déjà",
+    "tag_visual_id_already_used": "L'ID visuel '{{visualID}}' existe déjà",
     "redirect": "Naviguer vers Badges",
     "title": "Badge",
     "default_tag": "Badge par défaut",
@@ -1394,6 +1404,7 @@
     "delete_error": "Une erreur est survenue pendant la suppression de l'organisation, vérifiez les logs",
     "save_error_asset": "L'Organisation doit être active pour utiliser Asset",
     "save_error_refund": "La tarification doit être active pour utiliser le remboursement",
+    "save_error_roaming": "You cannot activate both the OCPI and OICP roaming components",
     "save_error_billing": "La tarification doit être active pour utiliser la facturation",
     "save_error_smart_charging": "L'organisation doit être active pour utiliser Smart Charging",
     "save_error_car_connector": "La gestion des véhicules doit être activée pour utiliser le connecteur des véhicules",
@@ -1491,6 +1502,7 @@
     },
     "billing": {
       "description": "L'interface de facturation permet aux fournisseurs de bornes de facturer leurs services.",
+      "deactivated_setting_message": "La facturation des sesssions de recharge est active. Les paramètres de connexion ne sont plus modifiables.",
       "not_found": "La configuration de la facturation n'est pas disponible",
       "not_properly_set": "La configuration de la facturation n'est pas configurée correctement",
       "create_success": "La configuration de la facturation a été créée avec succès",
@@ -1504,6 +1516,8 @@
       "payment_methods_create_title": "Créer une méthode de paiement",
       "payment_methods_create_success": "Le moyen de paiement se terminant par '{{last4}}' a été créé avec succès",
       "payment_methods_create_error": "Une erreur est survenue pendant la création du moyen de paiement, vérifiez les logs",
+      "payment_methods_create_error_card_declined": "Votre carte a été refusée, merci de fournir un moyen de paiement valide.",
+      "payment_methods_card_declined": "Carte refusée",
       "payment_methods_delete_title": "Supprimer une méthode de paiement",
       "payment_methods_delete_confirm": "Voulez-vous vraiment supprimer le moyen de paiement se terminant par '{{last4}}'?",
       "payment_methods_delete_success": "Le moyen de paiement se terminant par '{{last4}}' a été supprimé avec succès.",
@@ -1523,6 +1537,16 @@
       "payment_methods_card_number_error": "Numéro de carte invalide",
       "payment_methods_expiration_date_error": "Date d'expiration invalide",
       "payment_methods_cvc_error": "Code de vérification invalide",
+      "transaction_billing_activation": "Activer la facturation",
+      "transaction_billing_activation_title": "Activation de la facturation",
+      "transaction_billing_activation_confirm": "Voulez-vous vraiment activer la facturation des sessions de recharge ?<br><br> <strong> Attention ! </strong> Une fois activée, vous ne serez plus en mesure de la désactiver",
+      "transaction_billing_activation_success": "La facturation des sessions de recharge a été activée avec succès",
+      "transaction_billing_activation_error": "La facturation des sessions de recharge n'a pas pu être activée",
+      "billing_clear_test_data": "Supprimer les données de test",
+      "billing_clear_test_data_title": "Suppression des données de test",
+      "billing_clear_test_data_confirm": "Souhaitez-vous vraiment supprimer les données de test?",
+      "billing_clear_test_data_success": "Les données de test ont été supprimées",
+      "billing_clear_test_data_error": "L'opération a échoué. La suppression des données a été interrompue",
       "user": {
         "synchronize_users": "Synchro Utilisateurs (Facturation)",
         "synchronize_user": "Synchro Utilisateur (Facturation)",
@@ -1563,7 +1587,7 @@
         "invalid_secret_key": "La clé API secrète n'est pas plausible",
         "billing_method": "Méthode de facturation",
         "immediate_billing": "Facturation immédiate",
-        "periodic_billing": "Facturation périodique (pas encore implémentée)",
+        "periodic_billing": "Facturation périodique",
         "tax": "Taxe",
         "no_tax": "Aucune Taxe"
       }
@@ -1609,18 +1633,21 @@
         "name": "Nom",
         "description": "Description",
         "type": "Type",
+        "refreshIntervalMins": "Refresh Interval (mins)",
         "base_url": "URL",
         "user": "Utilisateur",
         "password": "Mot de passe",
-        "client_id":"Client ID",
-        "client_secret":"Client Secret",
+        "client_id": "ID Client",
+        "client_secret": "Secret Client",
+        "authentication_url": "URL Authentification",
         "delete_title": "Supprimer la connexion à la ressource",
         "delete_confirm": "Voulez-vous vraiment supprimer la connexion '{{assetConnectionName}}'?"
       },
       "types": {
         "schneider": "Gestion Bâtiment Schneider",
         "greencom": "GreenCom Gestion des Ressources",
-        "iothink": "ioThink Gestion des Ressources"
+        "iothink": "ioThink Gestion des Ressources",
+        "wit": "WIT Asset Management System"
       },
       "connection_success": "Connexion vers le système vérifiée avec succès",
       "unknown_connection_error": "Erreur de connexion inconnue",
@@ -2064,7 +2091,7 @@
     }
   },
   "car": {
-    "title": "Gestion Voiture",
+    "title": "Voiture",
     "description": "Gérer les voitures des utilisateurs",
     "tabs": {
       "car_catalogs": "Catalogue Voitures",
@@ -2140,6 +2167,7 @@
     "charging_station": "Borne",
     "started_at": "Date Début",
     "end_date": "Date Fin",
+    "stop_reason": "Raison",
     "consumption": "Consommation",
     "transactions_button": "Sessions",
     "transaction_today": "Aujourd'hui",
@@ -2210,6 +2238,8 @@
     "create_invoice_success": "Facture créée avec succès pour cette session",
     "create_invoice_error": "Une erreur est survenue pendant la création de la facture, vérifiez les logs",
     "redirect": "Naviguer vers Sessions",
+    "error_start_no_payment_method": "Service indisponible, veuillez accéder à votre profil pour fournir un moyen de paiement",
+    "error_start_general": "Service temporairement indisponible, veuillez contacter le support",
     "filter": {
       "type": {
         "name": "Type",
@@ -2328,8 +2358,13 @@
     },
     "errors": {
       "no_consumption": {
-        "title": "Pas de consommations",
+        "title": "Pas de Consommation",
         "description": "La session ne contient pas de données.",
+        "action": "Verifiez la configuration de la borne. Assurez vous que des données de charge sont transmises par la borne."
+      },
+      "low_consumption": {
+        "title": "Consommation Basse",
+        "description": "La session a une consommation < 1 kWh.",
         "action": "Verifiez la configuration de la borne. Assurez vous que des données de charge sont transmises par la borne."
       },
       "average_consumption_greater_than_connector_capacity": {
@@ -2338,22 +2373,27 @@
         "action": "Vérifiez la configuration de la borne. Assurez vous que la configuration du connecteur est correcte."
       },
       "negative_inactivity": {
-        "title": "Inactivité négative",
+        "title": "Inactivité Négative",
         "description": "La periode d'inactivité enregistrée est négative.",
         "action": "Verifiez la configuration de la borne. Assurez vous que les données de charge sont transmises dans le bon ordre."
       },
       "long_inactivity": {
-        "title": "Inactivité de plus de 24h",
+        "title": "Inactivité Importante",
         "description": "La session a été inactive pendant plus de 24 heures.",
         "action": "Vérifiez la session"
       },
       "negative_duration": {
-        "title": "Durée négative",
+        "title": "Durée Négative",
         "description": "La durée enregistrée est négative.",
         "action": "Verifiez la configuration de la borne. Assurez vous que les données de charge sont transmises dans le bon ordre."
       },
+      "low_duration": {
+        "title": "Durée Basse",
+        "description": "La durée enregistrée est inférieure à 1 min.",
+        "action": "Verifiez la configuration de la borne. Assurez vous que les données de charge sont transmises correctement."
+      },
       "missing_price": {
-        "title": "Transaction non valorisée",
+        "title": "Transaction non Valorisée",
         "description": "La transaction n'a pas été valorisée.",
         "action": "Bien que la tarification soit activée dans cette organisation, la transaction n'a pas été valorisée. veuillez contacter votre administrateur de site à ce sujet."
       },
@@ -2368,7 +2408,7 @@
         "action": "Supprimez cette transaction ou désactivez le contrôle d'accès de cette zone."
       },
       "no_billing_data": {
-        "title": "Transaction sans données de facturation",
+        "title": "Transaction sans Données de Facturation",
         "description": "Aucune donnée de facturation n'est assignée à cette transaction.",
         "action": "Supprimez cette transaction ou créer une facture a partir ce celle-ci."
       }
@@ -2404,6 +2444,7 @@
     "oicp_patch_status_error": "Me notifier lorsque le transfert des statuts des bornes a échoué vers la platforme de roaming (OICP)",
     "smtp_error": "Me notifier en cas d'erreur sur le serveur d'email",
     "billing_synchronization_failed": "Me notifier lorsqu'une synchronisation avec le service de facturation a échoué",
+    "billing_periodic_operation_failed": "Me notifier lorsqu'une opération de facturation périodique a échoué",
     "session_not_started": "Me notifier lorsque j'ai badger sur une borne de recharge mais aucune session n'a démarré",
     "user_account_inactivity": "Me notifier lorsque je ne me suis pas connecté à l'application depuis plus de 6 mois",
     "car_catalog_synchronization_failed": "Me notifier lorsqu'une synchronisation de véhicule a échoué",

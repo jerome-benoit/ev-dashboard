@@ -3,6 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { ComponentService } from 'services/component.service';
+import { SiteAreaTableFilter } from 'shared/table/filters/site-area-table-filter';
+import { SiteTableFilter } from 'shared/table/filters/site-table-filter';
+import TenantComponents from 'types/TenantComponents';
 
 import { AuthorizationService } from '../../../services/authorization.service';
 import { CentralServerNotificationService } from '../../../services/central-server-notification.service';
@@ -19,6 +23,7 @@ import { TableAutoRefreshAction } from '../../../shared/table/actions/table-auto
 import { TableMoreAction } from '../../../shared/table/actions/table-more-action';
 import { TableOpenInMapsAction } from '../../../shared/table/actions/table-open-in-maps-action';
 import { TableRefreshAction } from '../../../shared/table/actions/table-refresh-action';
+import { IssuerFilter } from '../../../shared/table/filters/issuer-filter';
 import { TableDataSource } from '../../../shared/table/table-data-source';
 import { Asset, AssetButtonAction, AssetType } from '../../../types/Asset';
 import ChangeNotification from '../../../types/ChangeNotification';
@@ -43,6 +48,7 @@ export class AssetsListTableDataSource extends TableDataSource<Asset> {
     public spinnerService: SpinnerService,
     public translateService: TranslateService,
     private messageService: MessageService,
+    private componentService: ComponentService,
     private dialogService: DialogService,
     private router: Router,
     private dialog: MatDialog,
@@ -182,7 +188,7 @@ export class AssetsListTableDataSource extends TableDataSource<Asset> {
     const openInMaps = new TableOpenInMapsAction().getActionDef();
     // Check if GPS is available
     openInMaps.disabled = !Utils.containsGPSCoordinates(asset.coordinates);
-    if (this.isAdmin) {
+    if (this.isAdmin && asset.issuer) {
       actions.push(this.editAction);
       actions.push(new TableMoreAction([
         openInMaps,
@@ -193,7 +199,7 @@ export class AssetsListTableDataSource extends TableDataSource<Asset> {
       actions.push(openInMaps);
     }
     // Display refresh button
-    if (this.isAdmin && asset.dynamicAsset) {
+    if (this.isAdmin && asset.dynamicAsset && !asset.usesPushAPI) {
       actions.splice(1, 0, this.retrieveConsumptionAction);
     }
     return actions;
@@ -254,6 +260,16 @@ export class AssetsListTableDataSource extends TableDataSource<Asset> {
   }
 
   public buildTableFiltersDef(): TableFilterDef[] {
-    return [];
+    const issuerFilter = new IssuerFilter().getFilterDef();
+    const filters: TableFilterDef[] = [
+      issuerFilter,
+    ];
+    // Show Site Area Filter If Organization component is active
+    if (this.componentService.isActive(TenantComponents.ORGANIZATION)) {
+      const siteFilter = new SiteTableFilter([issuerFilter]).getFilterDef();
+      filters.push(siteFilter);
+      filters.push(new SiteAreaTableFilter([issuerFilter, siteFilter]).getFilterDef());
+    }
+    return filters;
   }
 }

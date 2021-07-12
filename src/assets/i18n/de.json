@@ -27,7 +27,6 @@
     "connectors": "Verknüpfungen",
     "notifications": "Benachrichtungen",
     "app_name": "e-Mobility",
-    "last_update": "Version 2.4.66",
     "version": "Version",
     "about_us": "About Us",
     "unexpected_error_backend": "Ein unerwarteter Fehler ist aufgetreten",
@@ -237,7 +236,8 @@
       "download": "Download",
       "test_connection": "Verbindung testen",
       "force_available_status": "Status verfügbar erzwingen",
-      "force_unavailable_status": "Status nicht verfügbar erzwingen"
+      "force_unavailable_status": "Status nicht verfügbar erzwingen",
+      "display_users": "Display users"
     }
   },
   "issuer": {
@@ -331,11 +331,13 @@
     "name": "Name",
     "asset_type": "Asset-Typ",
     "fluctuation_percent": "Schwankungen (%)",
+    "variation_percent": "Aktionschwellenwert für Schwankungen (%)",
     "static_value_watt": "Statische Leistung (W)",
     "produce": "Produziert Energie",
     "consume": "Verbraucht Energie",
     "consume_and_produce": "Verbraucht und erzeugt Energie",
     "dynamic_asset": "Dynamisches Asset",
+    "uses_push_api": "Nutzt die Push-API",
     "instant_power": "Aktuelle Energie",
     "asset_connection": "Asset-Verbindung",
     "meter_id": "Metrik ID",
@@ -430,7 +432,8 @@
     "update_site_users_owner_error": "Beim Versuch '{{userName}}' als Standort-Eigentümer einzusetzen ist ein Fehler aufgetreten",
     "export_all_params_title": "OCPP Parameter exportieren",
     "export_all_params_confirm": "Wollen Sie wirklich alle OCPP Parameter von allen Ladestationen am Standort '{{siteName}}' exportieren ?",
-    "export_all_params_error": "Während des Exports aller OCPP Parameter ist ein Fehler aufgtreten."
+    "export_all_params_error": "Während des Exports aller OCPP Parameter ist ein Fehler aufgtreten.",
+    "display_users": "Display users"
   },
   "site_areas": {
     "assign_site": "Standort zuweisen",
@@ -1315,11 +1318,15 @@
     "status": {
       "paid": "Bezahlt",
       "unpaid": "Unbezahlt",
-      "draft": "Entwurf"
+      "draft": "Entwurf",
+      "deleted": "Deleted",
+      "uncollectible": "Uncollectible",
+      "void": "Cancelled"
     },
-    "id": "Rechnungsnummer",
+    "number": "Rechnungsnummer",
     "createdOn": "Rechnungsdatum",
     "price": "Rechnungspreis",
+    "amount": "Betrag",
     "cannot_retrieve_invoices": "Liste der Rechnungen kann nicht abgerufen werden",
     "cannot_download_invoice": "Rechnung kann nicht heruntergeladen werden",
     "number_of_items": "Ladevorgänge",
@@ -1331,6 +1338,8 @@
     "id": "ID",
     "not_active": "Dieser Badge ist nicht aktiv",
     "issuer": "Organisationseigentümer",
+    "visual_id": "Visual ID",
+    "visual_id_instruction": "Please fill the ID that is displayed on the badge",
     "status": "Status",
     "activated": "Aktiv",
     "deactivated": "Inaktiv",
@@ -1357,6 +1366,7 @@
     "tag_not_found": "Badge wurde nicht gefunden",
     "select_tags": "Badge auswählen",
     "tag_id_already_used": "Der Badge '{{tagID}}' existiert bereits",
+    "tag_visual_id_already_used": "The visualID '{{visualID}}' already exists",
     "redirect": "Zu den Badges navigieren",
     "title": "Badge",
     "default_tag": "Standard-Badge",
@@ -1393,6 +1403,7 @@
     "delete_success": "Die Organisation '{{name}}' wurde erfolgreich gelöscht",
     "delete_error": "Beim Löschen der Organisation ist ein Fehler aufgetreten",
     "save_error_refund": "Preisbildung muss für die Rückerstattung aktiv sein",
+    "save_error_roaming": "You cannot activate both the OCPI and OICP roaming components",
     "save_error_billing": "Preisbildung muss für Rechnungslegung aktiv sein",
     "save_error_smart_charging": "Organisation muss für Smart-Charging aktiv sein",
     "save_error_building": "Organisation muss aktiv sein, um Assets zu nutzen zu können",
@@ -1491,6 +1502,7 @@
     },
     "billing": {
       "description": "Das Abrechnungsinterface ermöglicht Abrechnungsfunktionen für den Ladestationenbetreiber.",
+      "deactivated_setting_message": "The billing of the charging sessions is active, the connection settings cannot be changed anymore.",
       "not_found": "Keine Abrechnungseinstellungen gefunden",
       "not_properly_set": "Die Abrechnungseinstellungen sind nicht richtig konfiguriert",
       "create_success": "Abrechnungseinstellungen erfolgreich erstellt",
@@ -1504,6 +1516,8 @@
       "payment_methods_create_title": "Eine neue Zahlungsmethode erstellen ",
       "payment_methods_create_success": "Die Zahlungsmethode, die mit '{{last4}}' endet, wurde erfolgreich erstellt",
       "payment_methods_create_error": "Beim Erstellen der Zahlungsmethode ist ein Fehler aufgetreten, bitte überprüfen Sie die Logs",
+      "payment_methods_create_error_card_declined": "Your card has been declined, please provide a valid payment method",
+      "payment_methods_card_declined": "Card declined",
       "payment_methods_delete_title": "Zahlungsmethode löschen",
       "payment_methods_delete_confirm": "Wollen Sie die Zahlungsmethode, die mit '{{last4}}' ended, wirklich löschen?",
       "payment_methods_delete_success": "Die Zahlungsmethode, die mit '{{last4}}' endet, wurde erfolgreich gelöscht",
@@ -1523,6 +1537,16 @@
       "payment_methods_card_number_error": "Ungültige Kartennummer",
       "payment_methods_expiration_date_error": "Ungültiges Ablaufdatum",
       "payment_methods_cvc_error": "Ungültiger Verifizierungscode",
+      "transaction_billing_activation": "Billing Activation",
+      "transaction_billing_activation_title": "Billing Activation",
+      "transaction_billing_activation_confirm": "Do you really want to activate the billing of charging sessions? <br><br> <strong> WARNING ! </strong> Once activated, you will NOT be able to deactivate it !",
+      "transaction_billing_activation_success": "Billing of charging sessions has been successfully activated",
+      "transaction_billing_activation_error": "Billing of charging sessions cannot be activated",
+      "billing_clear_test_data": "Delete Test Data",
+      "billing_clear_test_data_title": "Test Data Deletion",
+      "billing_clear_test_data_confirm": "Do you really want to delete all billing test data?",
+      "billing_clear_test_data_success": "The test data has been deleted",
+      "billing_clear_test_data_error": "Operation failed. The test data deletion has been aborted",
       "user": {
         "synchronize_users": "Abrechnungssynchronisierung",
         "synchronize_user": "Abrechnungssynchronisierung",
@@ -1563,7 +1587,7 @@
         "invalid_secret_key": "Geheimer API key ist nicht plausibel",
         "billing_method": "Abrechnungsmethode",
         "immediate_billing": "Unverzügliche Abrechnung",
-        "periodic_billing": "Periodische Abrechnung (noch nicht implementiert)",
+        "periodic_billing": "Periodische Abrechnung",
         "tax": "Steuern",
         "no_tax": "Keine Steuern"
       }
@@ -1609,18 +1633,21 @@
         "name": "Name",
         "description": "Beschreibung",
         "type": "Typ",
+        "refreshIntervalMins": "Aktualisierungsintervall (Minuten)",
         "base_url": "URL",
         "user": "Nutzer",
         "password": "Passwort",
-        "client_id":"Client ID",
-        "client_secret":"Client Secret",
+        "client_id": "Client ID",
+        "client_secret": "Client Secret",
+        "authentication_url": "Authentifizierungs-URL",
         "delete_title": "Asset-Verbindung löschen",
         "delete_confirm": "Möchten Sie die Verbindung '{{assetConnectionName}}' wirklich löschen?"
       },
       "types": {
         "schneider": "Schneider Building Management System",
         "greencom": "GreenCom Asset Management System",
-        "iothink": "ioThink Asset Management System"
+        "iothink": "ioThink Asset Management System",
+        "wit": "WIT Asset Management System"
       },
       "connection_success": "Die Verbindung zum System wurde erfolgreich getestet.",
       "unknown_connection_error": "Unbekannter Verbindungsfehler",
@@ -2064,7 +2091,7 @@
     }
   },
   "car": {
-    "title": "Fahrzeug Management",
+    "title": "Fahrzeug",
     "description": "Fahrzeuge verwalten",
     "tabs": {
       "car_catalogs": "Fahrzeugverzeichnisse",
@@ -2140,6 +2167,7 @@
     "charging_station": "Ladestation",
     "started_at": "Gestartet am",
     "end_date": "Enddatum",
+    "stop_reason": "Reason",
     "consumption": "Verbrauch",
     "transactions_button": "Ladevorgänge",
     "transaction_today": "Heute",
@@ -2210,6 +2238,8 @@
     "create_invoice_success": "Für diesen Ladevorgang wurde erfolgreich eine Rechnung erstellt.",
     "create_invoice_error": "Während der Erstellung der Rechnung für den Ladevorgang ist ein Fehler aufgetreten",
     "redirect": "Zu den Ladevorgängen navigieren",
+    "error_start_no_payment_method": "Service unavailable, please go to your profile to provide a payment method.",
+    "error_start_general": "Service temporarily unavailable, please contact the support.",
     "filter": {
       "type": {
         "name": "Typ",
@@ -2332,6 +2362,11 @@
         "description": "Der Ladevorgang beinhaltet keine metrischen Werte.",
         "action": "Überprüfen Sie die Einstellungen Ihrer Ladestation. Vergewissern Sie sich, dass die Ladestation metrische Werte sendet."
       },
+      "low_consumption": {
+        "title": "Low Consumption",
+        "description": "The session has a consumption < 1 kWh.",
+        "action": "Check the charging station settings. Ensure that meter values are sent by the charging station."
+      },
       "average_consumption_greater_than_connector_capacity": {
         "title": "Verbrauch zu hoch",
         "description": "Die durchschnittliche Ladeleistung ist höher als die Kapazität des Anschlusses.",
@@ -2343,14 +2378,19 @@
         "action": "Überprüfen Sie die Einstellungen der Ladestation. Vergewissern Sie sich, dass metrische Werte in der richtigen Reihenfolge gesendet werden."
       },
       "long_inactivity": {
-        "title": "Inaktivität über 24h",
-        "description": "Die Inaktivität Ihres Ladevorgangs ist größer als 24h.",
+        "title": "High Inactivity",
+        "description": "Die Inaktivität Ihres Ladevorgangs > 24h.",
         "action": "Überprufen des Ladevorganges"
       },
       "negative_duration": {
         "title": "Negative Dauer",
         "description": "Die Dauer Ihres Ladevorganges ist negativ.",
         "action": "Überprüfen Sie die Einstellungen der Ladestation. Vergewissern Sie sich, dass metrische Werte in der richtigen Reihenfolge gesendet werden."
+      },
+      "low_duration": {
+        "title": "Low duration",
+        "description": "The duration of the session < 1 minute.",
+        "action": "Check the charging station settings. Ensure that meter values are sent correctly."
       },
       "missing_price": {
         "title": "Fehlender Preis",
@@ -2404,6 +2444,7 @@
     "oicp_patch_status_error": "Benachrichtigen Sie mich, wenn der Transfer eines Ladestationsstatuses zur Roaming Plattform fehlgeschlagen ist (OICP)",
     "smtp_error": "Benachrichtigen Sie mich, wenn ein Fehler beim E-Mail-Server auftritt",
     "billing_synchronization_failed": "Benachrichtigen Sie mich, wenn eine Synchronisierung mit dem Abrechnungssystem fehlgeschlagen ist",
+    "billing_periodic_operation_failed": "Notify me when a periodic billing operation has failed",
     "session_not_started": "Benachrichtigen Sie mich, wenn kein Ladevorgang nach dem authentifizieren gestartet wurde",
     "user_account_inactivity": "Benachrichtigen Sie mich, wenn ich mich seit mehr als 6 Monaten nicht eingeloggt habe",
     "car_catalog_synchronization_failed": "Benachrichtigen Sie mich, wenn bei der Synchronisierung der Fahrzeuge ein Fehler auftrat",

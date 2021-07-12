@@ -39,7 +39,7 @@ import { TableRebuildTransactionConsumptionsAction, TableRebuildTransactionConsu
 import { TableViewTransactionAction, TableViewTransactionActionDef, TransactionDialogData } from '../../../shared/table/actions/transactions/table-view-transaction-action';
 import { ChargingStationTableFilter } from '../../../shared/table/filters/charging-station-table-filter';
 import { EndDateFilter } from '../../../shared/table/filters/end-date-filter';
-import { IssuerFilter, organisations } from '../../../shared/table/filters/issuer-filter';
+import { IssuerFilter, organizations } from '../../../shared/table/filters/issuer-filter';
 import { SiteAreaTableFilter } from '../../../shared/table/filters/site-area-table-filter';
 import { SiteTableFilter } from '../../../shared/table/filters/site-table-filter';
 import { StartDateFilter } from '../../../shared/table/filters/start-date-filter';
@@ -72,6 +72,7 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
   private createInvoice = new TableCreateTransactionInvoiceAction().getActionDef();
   private transactionPushOcpiCdrAction = new TablePushTransactionOcpiCdrAction().getActionDef();
   private exportTransactionOcpiCdrAction = new TableExportTransactionOcpiCdrAction().getActionDef();
+  private readonly isOrganizationComponentActive: boolean;
 
   public constructor(
     public spinnerService: SpinnerService,
@@ -97,10 +98,17 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
     this.isAdmin = this.authorizationService.isAdmin();
     this.isSiteAdmin = this.authorizationService.hasSitesAdminRights();
     // Init
+    this.isOrganizationComponentActive = this.componentService.isActive(TenantComponents.ORGANIZATION);
+    if (this.isOrganizationComponentActive) {
+      this.setStaticFilters([{
+        WithCompany: true,
+        WithSite: true,
+        WithSiteArea: true,
+        Statistics: 'history',
+      }]);
+    }
     this.initDataSource();
     this.initFilters();
-    // Add statistics to query
-    this.setStaticFilters([{ Statistics: 'history' }]);
   }
 
   public initFilters() {
@@ -132,7 +140,7 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
     if (issuer) {
       const issuerTableFilter = this.tableFiltersDef.find(filter => filter.id === 'issuer');
       if (issuerTableFilter) {
-        issuerTableFilter.currentValue = [organisations.find(organisation => organisation.key === issuer)];
+        issuerTableFilter.currentValue = [organizations.find(organisation => organisation.key === issuer)];
         this.filterChanged(issuerTableFilter);
       }
     }
@@ -194,16 +202,16 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
   }
 
   public buildTableColumnDefs(): TableColumnDef[] {
-    const columns: TableColumnDef[] = [];
+    const tableColumns: TableColumnDef[] = [];
     if (this.isAdmin) {
-      columns.push({
+      tableColumns.push({
         id: 'id',
         name: 'transactions.id',
         headerClass: 'col-10p',
         class: 'col-10p',
       });
     }
-    columns.push(
+    tableColumns.push(
       {
         id: 'timestamp',
         name: 'transactions.started_at',
@@ -213,6 +221,21 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
         sortable: true,
         direction: 'desc',
         formatter: (value: Date) => this.datePipe.transform(value),
+      },
+      {
+        id: 'stop.timestamp',
+        name: 'transactions.end_date',
+        headerClass: 'col-15p',
+        class: 'text-left col-15p',
+        sortable: true,
+        formatter: (value: Date) => this.datePipe.transform(value),
+      },
+      {
+        id: 'stop.reason',
+        name: 'transactions.stop_reason',
+        headerClass: 'col-10p',
+        class: 'text-left col-10p',
+        formatter: (reason: string) => reason ?? '-',
       },
       {
         id: 'stop.totalDurationSecs',
@@ -234,10 +257,32 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
         headerClass: 'text-center col-10p',
         class: 'text-center col-10p',
         formatter: (connectorId: number) => this.appConnectorIdPipe.transform(connectorId),
-      }
+      },
     );
+    if (this.isOrganizationComponentActive) {
+      tableColumns.push(
+        {
+          id: 'company.name',
+          name: 'companies.title',
+          class: 'd-none d-xl-table-cell col-20p',
+          headerClass: 'd-none d-xl-table-cell col-20p',
+        },
+        {
+          id: 'site.name',
+          name: 'sites.title',
+          class: 'd-none d-xl-table-cell col-20p',
+          headerClass: 'd-none d-xl-table-cell col-20p',
+        },
+        {
+          id: 'siteArea.name',
+          name: 'site_areas.title',
+          class: 'd-none d-xl-table-cell col-20p',
+          headerClass: 'd-none d-xl-table-cell col-20p',
+        },
+      );
+    }
     if (this.isAdmin || this.isSiteAdmin) {
-      columns.push({
+      tableColumns.push({
         id: 'user',
         name: 'transactions.user',
         headerClass: 'col-15p',
@@ -254,7 +299,7 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
     }
     if (this.componentService.isActive(TenantComponents.CAR)) {
       if (this.authorizationService.canListCars()) {
-        columns.push({
+        tableColumns.push({
           id: 'carCatalog',
           name: 'car.title',
           headerClass: 'text-center col-15p',
@@ -264,7 +309,7 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
         });
       }
       if (this.authorizationService.canUpdateCar()) {
-        columns.push({
+        tableColumns.push({
           id: 'car.licensePlate',
           name: 'cars.license_plate',
           headerClass: 'text-center col-15p',
@@ -274,7 +319,7 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
         });
       }
     }
-    columns.push(
+    tableColumns.push(
       {
         id: 'stop.totalInactivitySecs',
         name: 'transactions.inactivity',
@@ -300,7 +345,7 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
       },
     );
     if (this.componentService.isActive(TenantComponents.PRICING)) {
-      columns.push({
+      tableColumns.push({
         id: 'stop.roundedPrice',
         name: 'transactions.price',
         headerClass: 'col-10p',
@@ -311,15 +356,15 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
     }
     if (this.componentService.isActive(TenantComponents.BILLING) &&
         this.authorizationService.canListInvoicesBilling()) {
-      columns.push({
-        id: 'billingData.invoiceID',
-        name: 'invoices.id',
+      tableColumns.push({
+        id: 'billingData.stop.invoiceNumber',
+        name: 'invoices.number',
         headerClass: 'text-center col-10p',
         class: 'col-10p',
-        formatter: (invoiceID: string) => invoiceID ? invoiceID : '-',
+        formatter: (invoiceNumber: string) => invoiceNumber || '-',
       });
     }
-    return columns;
+    return tableColumns;
   }
 
   public formatInactivity(totalInactivitySecs: number, row: Transaction) {
@@ -361,23 +406,47 @@ export class TransactionsHistoryTableDataSource extends TableDataSource<Transact
   }
 
   public buildTableFiltersDef(): TableFilterDef[] {
+    let userFilter: TableFilterDef;
+    const issuerFilter = new IssuerFilter().getFilterDef();
     const filters: TableFilterDef[] = [
-      new IssuerFilter().getFilterDef(),
+      issuerFilter,
       new StartDateFilter(moment().startOf('y').toDate()).getFilterDef(),
       new EndDateFilter().getFilterDef(),
-      new ChargingStationTableFilter().getFilterDef(),
-      new ConnectorTableFilter().getFilterDef(),
       new TransactionsInactivityStatusFilter().getFilterDef(),
     ];
     // Show Site Area Filter If Organization component is active
     if (this.componentService.isActive(TenantComponents.ORGANIZATION)) {
-      filters.push(new SiteTableFilter().getFilterDef());
-      filters.push(new SiteAreaTableFilter().getFilterDef());
+      const siteFilter = new SiteTableFilter([issuerFilter]).getFilterDef();
+      const siteAreaFilter = new SiteAreaTableFilter([issuerFilter, siteFilter]).getFilterDef();
+      filters.push(siteFilter);
+      filters.push(siteAreaFilter);
+      if (this.authorizationService.canListChargingStations()) {
+        filters.push(new ChargingStationTableFilter([issuerFilter, siteFilter, siteAreaFilter]).getFilterDef());
+        filters.push(new ConnectorTableFilter().getFilterDef());
+      }
+      if ((this.authorizationService.canListUsers())) {
+        userFilter = new UserTableFilter([issuerFilter, siteFilter]).getFilterDef();
+        filters.push(userFilter);
+      }
+      if ((this.authorizationService.canListTags())) {
+        filters.push(new TagTableFilter(
+          userFilter ? [issuerFilter, siteFilter, userFilter] : [issuerFilter, siteFilter]).getFilterDef());
+      }
+    } else {
+      if (this.authorizationService.canListChargingStations()) {
+        filters.push(new ChargingStationTableFilter([issuerFilter]).getFilterDef());
+        filters.push(new ConnectorTableFilter().getFilterDef());
+      }
+      if ((this.authorizationService.canListUsers())) {
+        userFilter = new UserTableFilter([issuerFilter]).getFilterDef();
+        filters.push(userFilter);
+      }
+      if ((this.authorizationService.canListTags())) {
+        filters.push(new TagTableFilter(
+          userFilter ? [issuerFilter, userFilter] : [issuerFilter]).getFilterDef());
+      }
     }
-    if (this.authorizationService.isAdmin() || this.authorizationService.hasSitesAdminRights()) {
-      filters.push(new UserTableFilter(this.authorizationService.getSitesAdmin()).getFilterDef());
-      filters.push(new TagTableFilter().getFilterDef());
-    }
+    filters.push(new ConnectorTableFilter().getFilterDef());
     return filters;
   }
 

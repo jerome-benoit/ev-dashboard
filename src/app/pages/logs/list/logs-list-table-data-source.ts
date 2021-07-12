@@ -255,7 +255,7 @@ export class LogsListTableDataSource extends TableDataSource<Log> {
 
   public buildTableFiltersDef(): TableFilterDef[] {
     const tableFiltersDef = [
-      new StartDateFilter().getFilterDef(),
+      new StartDateFilter(moment().startOf('d').toDate()).getFilterDef(),
       new EndDateFilter().getFilterDef(),
       new LogLevelTableFilter().getFilterDef(),
       new LogActionTableFilter().getFilterDef(),
@@ -267,10 +267,10 @@ export class LogsListTableDataSource extends TableDataSource<Log> {
     }
     if (this.authorizationService.isAdmin()) {
       tableFiltersDef.push(new UserTableFilter().getFilterDef());
-      tableFiltersDef.push(new LogSourceTableFilter(this.authorizationService.getSitesAdmin()).getFilterDef());
+      tableFiltersDef.push(new LogSourceTableFilter().getFilterDef());
     } else {
-      tableFiltersDef.push(new UserTableFilter(this.authorizationService.getSitesAdmin()).getFilterDef());
-      tableFiltersDef.push(new LogSourceTableFilter(this.authorizationService.getSitesAdmin()).getFilterDef());
+      tableFiltersDef.push(new UserTableFilter().getFilterDef());
+      tableFiltersDef.push(new LogSourceTableFilter().getFilterDef());
     }
     return tableFiltersDef;
   }

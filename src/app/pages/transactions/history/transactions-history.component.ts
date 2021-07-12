@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TransactionDialogComponent } from 'shared/dialogs/transaction/transaction.dialog.component';
 import { DialogMode } from 'types/Authorization';
-import { Transaction } from 'types/Transaction';
 
 import { WindowService } from '../../../services/window.service';
-import { TableViewTransactionAction } from '../../../shared/table/actions/transactions/table-view-transaction-action';
+import { TableViewTransactionAction, TransactionDialogData } from '../../../shared/table/actions/transactions/table-view-transaction-action';
 import { Utils } from '../../../utils/Utils';
 import { TransactionsHistoryTableDataSource } from './transactions-history-table-data-source';
 
@@ -28,7 +27,7 @@ export class TransactionsHistoryComponent implements OnInit {
     if (transactionID) {
       const viewAction = new TableViewTransactionAction().getActionDef();
       viewAction.action(TransactionDialogComponent, this.dialog, {
-        dialogData: { id: transactionID } as Transaction,
+        dialogData: { transactionID } as TransactionDialogData,
         dialogMode: DialogMode.VIEW
       });
       // Clear Search

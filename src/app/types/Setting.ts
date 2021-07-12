@@ -241,16 +241,19 @@ export interface AssetConnectionSetting extends TableData {
   description: string;
   url: string;
   type: AssetConnectionType;
+  refreshIntervalMins?: number;
   schneiderConnection?: AssetSchneiderConnectionType;
   greencomConnection?: AssetGreencomConnectionType;
   iothinkConnection?: AssetIothinkConnectionType;
+  witConnection?: AssetWitConnectionType;
 }
 
 export enum AssetConnectionType {
   NONE = '',
   SCHNEIDER = 'schneider',
   GREENCOM = 'greencom',
-  IOTHINK = 'iothink'
+  IOTHINK = 'iothink',
+  WIT = 'wit',
 }
 
 export interface AssetUserPasswordConnectionType {
@@ -265,6 +268,12 @@ export type AssetIothinkConnectionType = AssetUserPasswordConnectionType;
 export interface AssetGreencomConnectionType {
   clientId: string;
   clientSecret: string;
+}
+
+export interface AssetWitConnectionType extends AssetUserPasswordConnectionType  {
+  clientId: string;
+  clientSecret: string;
+  authenticationUrl: string;
 }
 
 export enum CarConnectorSettingsType {
