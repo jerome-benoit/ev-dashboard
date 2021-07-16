@@ -24,6 +24,19 @@ export class ReleaseNotesComponent {
   public buildReleaseNotes() {
     this.releaseNotes = [
       {
+        version: '2.4.77',
+        date: new Date('2021-07-15'),
+        componentChanges: [
+          {
+            name: 'Dashboard',
+            changes: [
+              `Fixed excluded already processed Charge Points`,
+              `Do not update the Charging Station's heart beat when checked by the job`,
+            ],
+          },
+        ],
+      },
+      {
         version: '2.4.76',
         date: new Date('2021-07-14'),
         componentChanges: [
